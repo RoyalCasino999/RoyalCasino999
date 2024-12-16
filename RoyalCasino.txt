@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casino Slot Machine</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="casino-container">
+    <h1>Slot Machine Game</h1>
+    <div class="slot-machine">
+      <div class="reel" id="reel1"></div>
+      <div class="reel" id="reel2"></div>
+      <div class="reel" id="reel3"></div>
+    </div>
+    <div class="controls">
+      <button id="spin-btn">Spin</button>
+      <p id="message"></p>
+      <p>Credits: <span id="credits">100</span></p>
+      <p>Bet: <input type="number" id="bet" value="10" min="1" max="50"></p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f7f7f7;
+}
+
+.casino-container {
+  text-align: center;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 24px;
+}
+
+.slot-machine {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.reel {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #eee;
+  font-size: 32px;
+  border-radius: 5px;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+input {
+  padding: 5px;
+  font-size: 16px;
+}
+
+p {
+  font-size: 18px;
+}
+let credits = 100;
+const reelSymbols = ['🍒', '🍋', '🍊', '🍉', '🍇', '🍀'];
+const spinBtn = document.getElementById('spin-btn');
+const reel1 = document.getElementById('reel1');
+const reel2 = document.getElementById('reel2');
+const reel3 = document.getElementById('reel3');
+const message = document.getElementById('message');
+const creditsDisplay = document.getElementById('credits');
+const betInput = document.getElementById('bet');
+
+function updateCredits(amount) {
+  credits += amount;
+  creditsDisplay.textContent = credits;
+}
+
+function spinReels() {
+  const reel1Symbol = reelSymbols[Math.floor(Math.random() * reelSymbols.length)];
+  const reel2Symbol = reelSymbols[Math.floor(Math.random() * reelSymbols.length)];
+  const reel3Symbol = reelSymbols[Math.floor(Math.random() * reelSymbols.length)];
+
+  reel1.textContent = reel1Symbol;
+  reel2.textContent = reel2Symbol;
+  reel3.textContent = reel3Symbol;
+
+  return [reel1Symbol, reel2Symbol, reel3Symbol];
+}
+
+function checkWin(reels, betAmount) {
+  if (reels[0] === reels[1] && reels[1] === reels[2]) {
+    message.textContent = "You Win!";
+    updateCredits(betAmount * 2); // Double the bet amount on win
+  } else {
+    message.textContent = "Try Again!";
+    updateCredits(-betAmount); // Deduct the bet amount on loss
+  }
+}
+
+spinBtn.addEventListener('click', () => {
+  const betAmount = parseInt(betInput.value);
+  
+  if (credits >= betAmount) {
+    const reels = spinReels();
+    checkWin(reels, betAmount);
+  } else {
+    message.textContent = "You don't have enough credits!";
+  }
+});
